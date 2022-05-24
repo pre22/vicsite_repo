@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Deposit | Dashboard{% endblock title %}
+
+{% block pagetitle %}Deposit{% endblock pagetitle %}
+
+{% block content %}
+<div class="rounded-xl h-[auto] font-medium bg-slate-50/100">
+    <section class="p-20">
+        <form method="POST" action="{% url 'deposit' %}">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 gap-10 sm:grid-cols-2">
+
+                <div class="">
+                    <label class="text-gray-700" for="packagecategory">Package Category</label>
+                    {{ form.package }}
+                    <!-- <select class="block w-full border border-blue-400 py-4 px-4 mt-3 focus:border-blue-500 focus:ring-blue300 focus:ring focus:outline-none focus:ring-opacity-30" name="packagecategory" id="">
+                        <option value="basic">Basic</option>
+                        <option value="normal">Normal</option>
+                        <option value="advance">Advance</option>
+                        <option value="premium">Premium</option>
+                    </select> -->
+                </div>
+
+                <div>
+                    <label class="text-gray-700" for="cointype">Coin Type</label>
+                    {{ form.coin }}
+                    <!-- <select class="block w-full border border-blue-400 py-4 px-4 mt-3 focus:border-blue-500 focus:ring-blue300 focus:ring focus:outline-none focus:ring-opacity-30" name="cointype" id="">
+                        <option value="btc">Bitcoin</option>
+                        <option value="eth">Ethereum</option>
+                        <option value="trx">Tron</option>
+                        <option value="xrp">Ripple</option>
+                    </select> -->
+                </div>
+
+                <div>
+                    <label class="text-gray-700" for="walletaddress">Wallet Address</label>
+                    {{ form.company_wallet_address }}
+                    <!-- <input class="block w-full border border-blue-400 py-4 mt-3 px-4 focus:border-blue-500 focus:ring-blue300 focus:ring focus:outline-none focus:ring-opacity-30" type="text" id="country" name="walletaddress" value="jakjaergjqergjiernqjrtbjert" readonly> -->
+                </div>
+
+                <div>
+                    <label class="text-gray-700" for="amount">Amount</label>
+                    {{ form.amount }}
+                    <!-- <input class="block w-full border border-blue-400 py-4 mt-3 px-4 focus:border-blue-500 focus:ring-blue300 focus:ring focus:outline-none focus:ring-opacity-30" type="number" name="amount" id=""> -->
+                </div>
+
+                <div class="">
+                    <label class="text-gray-700 text-2xl" for="imagefield">Proof of Deposit</label>
+                    {% comment %} {{ form.proof }} {% endcomment %}
+                    <p>Send a screenshot of your transfer to admin@avaloqsassets.com for confirmation </p>
+                    <!-- <input class="block bg-white w-full border border-blue-400 py-4 mt-3 px-4 focus:border-blue-500 focus:ring-blue300 focus:ring focus:outline-none focus:ring-opacity-30" type="file" name="deposit proof" id=""> -->
+                </div>
+
+                <!-- divider  -->
+                <div>
+
+                </div>
+
+                <div>
+                    <button class="w-64 text-white font-medium block bg-[#6675FF] py-4 px-4 rounded-md">
+                        Deposit
+                    </button>
+                </div>
+            </div>
+        </form>
+    </section>
+
+    <div class="grid grid-cols-1 gap-10 sm:grid-cols-2 p-20">
+        <!-- Wallet Address  -->
+        <div class="text-gray-700">
+            <h1 class="text-2xl pb-6">List of Wallet Address</h1>
+            <p>Kindly click on any Coin of your choice and copy the wallet address to continue your transaction</p>
+        </div>
+        <div class="space-y-4">
+            {% for details in detail %}
+            <div
+              x-data="{ activeAccordion: false, maxHeight: 0 }"
+              x-init="maxHeight = `${$refs.accordionContent.scrollHeight}px`"
+              class="overflow-hidden"
+            >
+              <button
+                @click="activeAccordion = !activeAccordion"
+                class="flex items-center justify-between w-full p-6 text-white bg-[#6675FF] shadow-sm rounded-lg"
+              >
+                <h2 class="font-semibold">{{ details.coin }}<h2>
+          
+                <span
+                  :class="{ '-rotate-180': activeAccordion }"
+                  class="transition"
+                  aria-hidden="true"
+                >
+                  👇
+                </span>
+              </button>
+          
+              <div
+                x-ref="accordionContent"
+                :class="{ 'mt-4': activeAccordion }"
+                :style="activeAccordion && { 'max-height': maxHeight }"
+                class="transition-all max-h-0"
+              >
+                <p class="bg-gray-200 p-6 font-normal">
+                  {{ details.coin_wallet_address }}
+                </p>
+              </div>
+            </div>
+            {% endfor %}
+          
+          </div>
+        
+    </div>
+</div>
+
+{% endblock content %}

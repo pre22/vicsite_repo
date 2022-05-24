@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+
+  backend:
+    build:
+      context: .
+      args:
+        - deployment_environment=staging
+    environment:
+      - BACKEND_SECRET_KEY=mysecretkey
+    volumes:
+      - .:/srv/http/${USER:-backend}:z
+    restart: unless-stopped
+    networks:
+      - db
+    depends_on:
+      - postgres
+    ports:
+      - "80:8000"
+
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_DB=backend_db
+      - POSTGRES_USER=backend_user
+      - POSTGRES_PASSWORD=backend_password
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgres/data
+    networks:
+      - db
+    ports:
+      - "5432"
+
+networks:
+  db:
+volumes:
+  postgres_data:

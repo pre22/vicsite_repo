@@ -1,0 +1,128 @@
+version: "3.9"
+
+services:
+
+  backend:
+    build:
+      context: ./src
+      args:
+        - deployment_environment=production
+        - user=avaloqsassets
+    networks:
+      - nginxproxy
+      - postgres
+      - redis
+    env_file:
+      - ./configs/envs/backend.env
+    environment:
+      - SSL_POLICY=Mozilla-Modern
+      - VIRTUAL_PORT=8000
+      - VIRTUAL_PROTO=uwsgi
+      - BACKEND_DB_HOST=postgres
+      - BACKEND_DB_PORT=5432
+    volumes:
+      - ./src:/srv/http/avaloqsassets
+    restart: unless-stopped
+    depends_on:
+      - nginxproxy
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres
+    env_file:
+      - ./configs/envs/postgres.env
+    environment:
+      - POSTGRES_HOST=postgres
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgres/data
+    depends_on:
+      - redis
+    networks:
+      - postgres
+      - pgadmin4
+
+  nginxproxy:
+    image: nginxproxy/nginx-proxy
+    labels:
+      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy=true"
+    networks:
+      - nginxproxy
+    restart: always
+    env_file:
+      - ./configs/envs/nginxproxy.env
+    environment:
+      - SSL_POLICY=Mozilla-Modern
+      - ENABLE_IPV6=true
+    volumes:
+      - "nginxproxy-certs:/etc/nginx/certs:ro"
+      - "nginxproxy-html:/usr/share/nginx/html"
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+      - "./configs/nginxproxy/conf.d:/etc/nginx/conf.d"
+      - "./configs/nginxproxy/vhost.d:/etc/nginx/vhost.d"
+      - "./src/static:/srv/ftp/avaloqsassets/static"
+      - "./src/media:/srv/ftp/avaloqsassets/media"
+    ports:
+      - "80:80"
+      - "443:443"
+
+  nginxproxy-acme:
+    image: nginxproxy/acme-companion
+    networks:
+      - nginxproxy
+    volumes:
+      - nginxproxy-certs:/etc/nginx/certs
+      - nginxproxy-html:/usr/share/nginx/html
+      - nginxproxy-acme:/etc/acme.sh
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./configs/nginxproxy/vhost.d:/etc/nginx/vhost.d
+    depends_on:
+      - nginxproxy
+    restart: always
+    env_file:
+      - ./configs/envs/nginxproxy_acme.env
+
+
+  pgadmin4:
+    image: dpage/pgadmin4
+    env_file:
+      - ./configs/envs/pgadmin4.env
+    environment:
+      - VIRTUAL_PORT=5050
+      - PGADMIN_LISTEN_PORT=5050
+    volumes:
+      - pgadmin4_data:/var/lib/pgadmin
+      - pgadmin4_root:/root/.pgadmin
+    networks:
+      - pgadmin4
+      - nginxproxy
+    depends_on:
+      - postgres
+    restart: always
+    expose:
+      - "5050"
+
+  redis:
+    image: redis
+    env_file:
+      - ./configs/envs/redis.env
+    restart: unless-stopped
+    networks:
+      - redis
+    volumes:
+      - redis_data:/data
+
+networks:
+  redis:
+  postgres:
+  pgadmin4:
+  nginxproxy:
+volumes:
+  nginxproxy-certs:
+  nginxproxy-html:
+  nginxproxy-acme:
+  postgres_data:
+  pgadmin4_root:
+  pgadmin4_data:
+  redis_data:

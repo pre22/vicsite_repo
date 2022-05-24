@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Avaloqsasset</title>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+</head>
+<body>
+    {% if form.errors %}
+    <!-- Error Message -->
+    <div x-data="{ showAlert: true }" class="grid w-auto mt-5 absolute top-0 right-0">
+        <div
+            x-cloak
+            x-show="showAlert"
+            x-init="setTimeout(() => showAlert = false, 3000)"
+            class="relative p-6 overflow-hidden shadow-md text-red-600 text-sm bg-white rounded-lg"
+            role="alert"
+        >
+            <span class="absolute inset-x-0 top-0 h-1.5 bg-red-300"></span>
+            
+            {% if forms.errors.username %}
+            <strong>{{ form.errors.name }}</strong>
+            
+            {% elif forms.errors.password %}
+            <strong>{{ form.errors.password }}</strong>
+            
+            {% elif form.non_field_errors %}
+            <strong>{{ form.non_field_errors }}</strong>
+
+            {% endif %}
+
+            
+        </div>
+    </div>
+    
+    {% endif %}
+    <div class="h-screen grid items-center justify-center">
+
+
+        <section class="bg-white rounded-md shadow-md w-96 mx-auto  my-auto p-6"> 
+            <div class="h-32 grid justify-center">
+                <img src="{% static 'img/logo-img.png' %}" alt="" >
+            </div>
+
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                <div class="grid grid-cols-1 gap-6 font-medium">
+
+
+                    <div>
+                        <label class="text-gray-700" for="id_login">Username</label>
+                        {{ form.username }}
+                    </div>
+                    
+                    <div>
+                        <label class="text-gray-700" for="id_password">Password</label>
+                        {{ form.password }}
+                    </div>
+
+                    <div>
+                        <label for="id_remember">Remember Me:</label>
+                        <input type="checkbox" name="remember" id="id_remember">
+                    </div>
+
+                </div>
+                <div class="grid pt-4 mt-2 justify-center">
+                    <button class="px-6 py-2 bg-gray-700 rounded-md text-white font-medium focus:outline-none focus:bg-gray-600 hover:bg-gray-600 w-full">Submit</button>
+                </div>
+            </form>
+            <div class="flex space-x-4 text-sky-500 justify-center mt-4">
+                <p><a href="{% url 'signup' %}">Register</a></p>
+                <p><a href="{% url 'login' %}">Login</a></p>
+                <p><a href="{% url 'forgot_password' %}">Forgot Password</a></p>
+            </div>
+        </section>
+    </div>
+
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</body>
+</html>

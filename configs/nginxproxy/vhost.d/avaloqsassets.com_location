@@ -1,0 +1,9 @@
+location /static/ {
+  alias /srv/ftp/avaloqsassets/static/;
+  add_header Access-Control-Allow-Origin *;
+}
+
+location /media/ {
+  alias /srv/ftp/avaloqsassets/media/;
+  add_header Access-Control-Allow-Origin *;
+}
