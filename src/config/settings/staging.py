@@ -18,11 +18,5 @@ DATABASES = {
     }
 }
 
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
-        "LOCATION": "ava_caches_cache",
-    }
-}
 
 STATIC_ROOT = BASE_DIR / "static"
