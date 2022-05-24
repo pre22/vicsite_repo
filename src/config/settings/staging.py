@@ -6,7 +6,6 @@ INSTALLED_APPS += [
     'django.contrib.postgres',
 ]
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DATABASES = {
     'default': {
@@ -25,3 +24,5 @@ CACHES = {
         "LOCATION": "ava_caches_cache",
     }
 }
+
+STATIC_ROOT = BASE_DIR / "static"
