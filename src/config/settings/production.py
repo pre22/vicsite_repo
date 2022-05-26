@@ -39,8 +39,8 @@ USE_X_FORWARDED_PORT = True
 
 # EMAIL CONFIG
 EMAIL_BACKEND = 'django_mailjet.backends.MailjetBackend'
-MAILJET_API_KEY = decouple_config('MAILJET_API_KEY')
-MAILJET_API_SECRET = decouple_config('MAILJET_API_SECRET')
+MAILJET_API_KEY = decouple_config('API_KEY')
+MAILJET_API_SECRET = decouple_config('API_SECRET')
 EMAIL_HOST = 'in-v3.mailjet.com'
 # EMAIL_PORT = 587
 # EMAIL_HOST_USER = decouple_config("EMAIL_HOST_API_KEY")
