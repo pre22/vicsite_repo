@@ -10,7 +10,7 @@ services:
     environment:
       - BACKEND_SECRET_KEY=mysecretkey
     volumes:
-      - .:/srv/http/avaloqsassets
+      - ".:/srv/http/avaloqsassets"
     restart: unless-stopped
     networks:
       - db
