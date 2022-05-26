@@ -46,3 +46,9 @@ EMAIL_HOST = 'in-v3.mailjet.com'
 # EMAIL_HOST_USER = decouple_config("EMAIL_HOST_API_KEY")
 # EMAIL_HOST_PASSWORD = decouple_config("EMAIL_HOST_API_SECRET")
 # EMAIL_USE_TLS = True
+
+
+
+
+ALLOWED_HOSTS = ['avaloqsassets.com', 'www.avaloqsassets.com']
+

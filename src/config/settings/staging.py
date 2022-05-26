@@ -1,6 +1,9 @@
 from .base import *
+DEPLOYMENT_ENVIRONMENT = decouple_config('DEPLOYMENT_ENVIRONMENT', default='local')
 
 ALLOWED_HOSTS = ['*']
+
+DEBUG = DEPLOYMENT_ENVIRONMENT not in ['production', 'staging']
 
 INSTALLED_APPS += [
     'django.contrib.postgres',
